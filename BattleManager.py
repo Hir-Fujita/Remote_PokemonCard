@@ -409,8 +409,9 @@ class FieldSystem:
                 if tag[0] == f"id_{card.index}":
                     x, y, _, _ = self.canvas.bbox(tag[0])
                     card.setCheck(False)
+                    self.canvas.delete(f"id_{card.index}")
                     self.canvas.create_image(x, y, image=card.image,
-                                         anchor="nw", tag=f"id_{card.index}")
+                                             anchor="nw", tag=f"id_{card.index}")
         self.manager.energy.flagUpdate(False)
         self.manager.support.flagUpdate(False)
         self.manager.retreat.flagUpdate(False)
