@@ -104,10 +104,7 @@ class BattleManager:
                         destination_list.insert(0, c)
                     else:
                         destination_list.append(c)
-                    try:
-                        source_list.remove(c)
-                    except:
-                        print(c)
+                    source_list.remove(c)
             else:
                 if returnTop:
                     destination_list.insert(0, card)
@@ -316,24 +313,25 @@ class FieldSystem:
             tag = self.findTag(event)
             if tag[-1] == "current":
                 if "system" in tag[0]:
-                    if "Deck" in tag[0]:
-                        self.manager.cardMove(FIELD, DECK, card=move_list)
-                        self.deleteCardImage(move_list)
-                    if "Hand" in tag[0]:
-                        self.manager.cardMove(FIELD, HAND, card=move_list)
-                        self.deleteCardImage(move_list)
-                    if "Trash" in tag[0]:
-                        self.manager.cardMove(FIELD, TRASH, card=move_list)
-                        self.deleteCardImage(move_list)
-                    if "Temp" in tag[0]:
-                        self.manager.cardMove(FIELD, TEMP, card=move_list)
-                        self.deleteCardImage(move_list)
-                    if "Lost" in tag[0]:
-                        self.manager.cardMove(FIELD, LOST, card=move_list)
-                        self.deleteCardImage(move_list)
-                    if "Side" in tag[0]:
-                        self.manager.cardMove(FIELD, SIDE, card=move_list)
-                        self.deleteCardImage(move_list)
+                    if len(move_list) != 0:
+                        if "Deck" in tag[0]:
+                            self.manager.cardMove(FIELD, DECK, card=move_list)
+                            self.deleteCardImage(move_list)
+                        if "Hand" in tag[0]:
+                            self.manager.cardMove(FIELD, HAND, card=move_list)
+                            self.deleteCardImage(move_list)
+                        if "Trash" in tag[0]:
+                            self.manager.cardMove(FIELD, TRASH, card=move_list)
+                            self.deleteCardImage(move_list)
+                        if "Temp" in tag[0]:
+                            self.manager.cardMove(FIELD, TEMP, card=move_list)
+                            self.deleteCardImage(move_list)
+                        if "Lost" in tag[0]:
+                            self.manager.cardMove(FIELD, LOST, card=move_list)
+                            self.deleteCardImage(move_list)
+                        if "Side" in tag[0]:
+                            self.manager.cardMove(FIELD, SIDE, card=move_list)
+                            self.deleteCardImage(move_list)
 
     def cardReplace(self, tag):
         x, y, x_end, y_end = self.canvas.bbox(tag[0])
