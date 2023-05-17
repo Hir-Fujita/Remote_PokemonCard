@@ -43,7 +43,7 @@ class CardManager:
     def createDeckImage(self):
         width = int(self.setting.card_width / 2)
         height = int(self.setting.card_height / 2)
-        image = Image.new("RGBA", (width*12, height*5), ("green"))
+        image = Image.new("RGBA", (width*12, height*5), self.setting.color)
         for num, card in enumerate(self.list):
             row = num // 12
             if num > 0:

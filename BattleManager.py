@@ -35,6 +35,8 @@ class BattleManager:
         if "systemList" in dir(self):
             for system in self.systemList:
                 system.reSetting(setting)
+        else:
+            self.field.reSetting(setting)
 
     def start(self, cardManagerList):
         self.list = cardManagerList.copy()
@@ -98,17 +100,20 @@ class BattleManager:
         else:
             if isinstance(card, list):
                 for c in card:
-                    source_list.remove(c)
                     if returnTop:
                         destination_list.insert(0, c)
                     else:
                         destination_list.append(c)
+                    try:
+                        source_list.remove(c)
+                    except:
+                        print(c)
             else:
-                source_list.remove(card)
                 if returnTop:
                     destination_list.insert(0, card)
                 else:
                     destination_list.append(card)
+                source_list.remove(card)
         self.systemImageUpdate(source)
         self.systemImageUpdate(destination)
         if source == FIELD:
@@ -499,6 +504,7 @@ class ChildSystem:
         self.list = []
         self.systemPosition = (0, 0, 0)
         self.system = None
+        self.canvas = None
 
     def reSetting(self, setting:Setting):
         self.setting = setting
@@ -635,6 +641,8 @@ class DeckSystem(ChildSystem):
         self.position_x = setting.position_x
         self.position_y = setting.position_y
         self.geometry = f"{self.window_width}x{self.window_height}+{self.position_x}+{self.position_y}"
+        if self.canvas is not None:
+            self.canvas.config(bg=self.setting.color)
 
     def reSetting(self, setting: Setting):
         super().reSetting(setting)
@@ -682,6 +690,8 @@ class HandSystem(ChildSystem):
         self.geometry = f"{self.window_width}x{self.window_height}+{self.position_x}+{self.position_y}"
         self.imageUpdate()
         self.manager.systemImageUpdate(self.system)
+        if self.canvas is not None:
+            self.canvas.config(bg=self.setting.color)
 
     def addCommand(self):
         super().addCommand()
@@ -730,6 +740,8 @@ class TrashSystem(ChildSystem):
         self.geometry = f"{self.window_width}x{self.window_height}+{self.position_x}+{self.position_y}"
         self.imageUpdate()
         self.manager.systemImageUpdate(self.system)
+        if self.window is not None:
+            self.canvas.config(bg=self.setting.color)
 
     def addCommand(self):
         super().addCommand()
@@ -757,6 +769,8 @@ class TempSystem(ChildSystem):
         self.geometry = f"{self.window_width}x{self.window_height}+{self.position_x}+{self.position_y}"
         self.imageUpdate()
         self.manager.systemImageUpdate(self.system)
+        if self.canvas is not None:
+            self.canvas.config(bg=self.setting.color)
 
     def addCommand(self):
         super().addCommand()
@@ -807,6 +821,8 @@ class SideSystem(ChildSystem):
         self.geometry = f"{self.window_width}x{self.window_height}+{self.position_x}+{self.position_y}"
         self.imageUpdate()
         self.manager.systemImageUpdate(self.system)
+        if self.canvas is not None:
+            self.canvas.config(bg=self.setting.color)
 
     def addCommand(self):
         super().addCommand()
@@ -839,6 +855,8 @@ class LostSystem(ChildSystem):
         self.geometry = f"{self.window_width}x{self.window_height}+{self.position_x}+{self.position_y}"
         self.imageUpdate()
         self.manager.systemImageUpdate(self.system)
+        if self.canvas is not None:
+            self.canvas.config(bg=self.setting.color)
 
     def addCommand(self):
         super().addCommand()

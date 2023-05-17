@@ -29,7 +29,6 @@ class Application(tk.Frame):
         menu_widget = tk.Menu(master)
         master.config(menu=menu_widget)
         select_menu = tk.Menu(menu_widget, tearoff=0)
-        setting_menu = tk.Menu(menu_widget, tearoff=0)
         menu_widget.add_command(label="開始",
                                 command=lambda:self.start(master))
         menu_widget.add_cascade(label="デッキを選ぶ",
@@ -38,14 +37,17 @@ class Application(tk.Frame):
                                 command=lambda:self.deck_entry_deckID())
         select_menu.add_command(label="ローカルファイルから読み込み",
                                 command=lambda:self.deck_entry_local())
-        # menu_widget.add_command(label='設定',
-        #                         command=lambda:self.setting.createWindow())
+        menu_widget.add_command(label='設定',
+                                command=lambda:self.setting.createWindow(self))
 
     def windowResize(self, master):
         self.setting.window_width = master.winfo_width()
         self.setting.window_height = master.winfo_height()
         self.setting.position_x = master.winfo_x()
         self.setting.position_y = master.winfo_y()
+        self.reSetting()
+
+    def reSetting(self):
         self.cardManager.reSetting(self.setting)
         self.battleManager.reSetting(self.setting)
 
@@ -97,10 +99,6 @@ class Application(tk.Frame):
                            sticky=tk.N + tk.S)
         scroll.grid(row=0, column=1,
                     sticky=tk.N + tk.S)
-        # select_button = tk.Button(frame1,
-        #                           text="SELECT",
-        #                           width=20)
-        # select_button.grid(row=1, column=0, pady=5)
         scroll["command"]=deck_list_box.yview
         deck_list_box.bind("<<ListboxSelect>>",lambda e:deck_list_click())
         deck_files = os.listdir("Remote_PokemonCard\Deck")

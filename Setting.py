@@ -3,6 +3,7 @@
 
 import os
 import tkinter as tk
+from tkinter import colorchooser
 
 from PIL import Image, ImageFont, ImageDraw, ImageTk
 
@@ -84,7 +85,11 @@ class Setting:
         image.resize((self.card_width, self.card_width))
         return image
 
-    def createWindow(self):
+    def create_color_image(self):
+        image = Image.new("RGBA", (self.card_width, self.card_height), self.color)
+        self.color_image = ImageTk.PhotoImage(image)
+
+    def createWindow(self, update):
         self.window = tk.Toplevel()
         self.window.geometry(f"{int(self.window_width /2)}x{int(self.window_height /2)}+{self.position_x}+{self.position_y}")
         self.window.title("設定")
@@ -98,9 +103,21 @@ class Setting:
         back_image_button.pack()
 
         canvas_color_frame = tk.Frame(self.window)
-        canvas_color_frame.grid(row=0, column=1)
-        canvas_color_button = tk.Button(canvas_color_frame, text="キャンバスの色")
-        canvas_color_button.grid(row=0, column=1)
+        canvas_color_frame.grid(row=0, column=1, padx=5)
+        canvas_color_button = tk.Button(canvas_color_frame, text="キャンバスの色",
+                                        command=lambda:change_color())
+        canvas_color_button.pack()
+        self.create_color_image()
+        canvas_color_label = tk.Label(canvas_color_frame,
+                                      image=self.color_image)
+        canvas_color_label.pack()
+
+        def change_color():
+            color = colorchooser.askcolor()
+            if color != (None, None):
+                print(color)
+                self.color = color[-1]
+                update.reSetting()
 
 
 
