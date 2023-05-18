@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import tkinter as tk
+from tkinter import messagebox
 import os
 
 from BattleManager import BattleManager
@@ -25,6 +26,7 @@ class Application(tk.Frame):
                         f"+{self.setting.position_x}+{self.setting.position_y}")
         master.title(f"{NAME}_{VERSION}")
         master.bind("<Configure>", lambda event:self.windowResize(master))
+        self.master.protocol("WM_DELETE_WINDOW", lambda:self.delete_window(master))
 
         menu_widget = tk.Menu(master)
         master.config(menu=menu_widget)
@@ -39,6 +41,12 @@ class Application(tk.Frame):
                                 command=lambda:self.deck_entry_local())
         menu_widget.add_command(label='設定',
                                 command=lambda:self.setting.createWindow(self))
+
+    def delete_window(self, master):
+        ret = messagebox.askyesno(title="終了確認",
+                                  message="Applicationを終了しますか？")
+        if ret:
+            master.destroy()
 
     def windowResize(self, master):
         self.setting.window_width = master.winfo_width()
