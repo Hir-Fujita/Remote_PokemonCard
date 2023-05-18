@@ -102,7 +102,7 @@ class Card:
         self.index = index
         if os.path.isdir(f"Remote_PokemonCard/Card/{cardID}"):
             filename = os.listdir(f"Remote_PokemonCard/Card/{cardID}")[0]
-            self.image_data = Image.open(f"Remote_PokemonCard/Card/{cardID}/{filename}")
+            self.image_data = Image.open(f"Remote_PokemonCard/Card/{cardID}/{filename}").resize((500, 700))
             if filename[0:5] == "ポケモン_":
                 self.hp = 0
             else:
