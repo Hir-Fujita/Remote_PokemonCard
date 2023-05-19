@@ -86,6 +86,7 @@ class Application(tk.Frame):
             self.cardManager.createDeckOnline(deckid)
             if len(self.cardManager.list) == 60:
                 self.cardManager.save()
+            deck_entry_window.destroy()
 
     def deck_entry_local(self):
         self.deck_image = self.cardManager.createDeckImage()
