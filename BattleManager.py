@@ -204,13 +204,14 @@ class FieldSystem:
         self.canvas.config(width=self.setting.window_width,
                            height=self.setting.window_height,
                            bg=self.setting.color)
-        self.updateCoin()
-        self.updateShuffle()
-        self.updateVstar()
-        self.updateCheckButton()
-        tags = self.getTagAll()
-        for tag in tags:
-            self.cardReplace(tag)
+        if self.manager.coin.image is not None:
+            self.updateCoin()
+            self.updateShuffle()
+            self.updateVstar()
+            self.updateCheckButton()
+            tags = self.getTagAll()
+            for tag in tags:
+                self.cardReplace(tag)
 
 
     def leftClick(self, event):
@@ -221,6 +222,7 @@ class FieldSystem:
             if self.tag[-1] == "current":
                 if "system" in self.tag[0]:
                     if "Deck" in self.tag[0]:
+                        self.manager.deck.mulligan_update(-1)
                         self.manager.cardMove(DECK, HAND)
                     if "Side" in self.tag[0]:
                         self.manager.cardMove(SIDE, HAND)
@@ -347,24 +349,28 @@ class FieldSystem:
     def mouseWheel(self, event):
         tag = self.findTag(event)
         if tag[-1] == "current":
-            for card in self.list:
-                if f"id_{card.index}" == tag[0]:
-                    break
-            if card.hp is not None:
-                x, y, _, _ = self.canvas.bbox(tag[0])
-                self.canvas.delete(tag[0])
-                if event.delta > 0:
-                    card.hpPlus()
-                else:
-                    card.hpMinus()
-                self.canvas.create_image(x, y, image=card.image,
-                                         anchor="nw", tag=f"id_{card.index}")
+            if not "system" in tag[0]:
+                for card in self.list:
+                    if f"id_{card.index}" == tag[0]:
+                        break
+                if card.hp is not None:
+                    x, y, _, _ = self.canvas.bbox(tag[0])
+                    self.canvas.delete(tag[0])
+                    if event.delta > 0:
+                        card.hpPlus()
+                    else:
+                        card.hpMinus()
+                    self.canvas.create_image(x, y, image=card.image,
+                                             anchor="nw", tag=f"id_{card.index}")
+            elif tag[0] == "system_Deck":
+                self.manager.deck.mulligan_update(event.delta)
 
     def doubleClick(self, event):
         tag = self.findTag(event)
         if tag[-1] == "current" and not tag[0] == "system_bg":
             if "system" in tag[0]:
                 if "Deck" in tag[0]:
+                    self.manager.deck.mulligan_update(-1)
                     self.manager.cardMove(DECK, HAND)
                 if "Side" in tag[0]:
                     self.manager.cardMove(SIDE, HAND)
@@ -642,6 +648,7 @@ class DeckSystem(ChildSystem):
         self.geometry = f"{self.window_width}x{self.window_height}+{self.position_x}+{self.position_y}"
         if self.canvas is not None:
             self.canvas.config(bg=self.setting.color)
+        self.mulligan_count = 0
 
     def reSetting(self, setting: Setting):
         super().reSetting(setting)
@@ -653,6 +660,49 @@ class DeckSystem(ChildSystem):
         self.geometry = f"{self.window_width}x{self.window_height}+{self.position_x}+{self.position_y}"
         self.imageUpdate()
         self.manager.systemImageUpdate(self.system)
+
+    def mulligan_update(self, delta):
+        if delta > 0:
+            self.mulligan_count +=1
+        else:
+            self.mulligan_count -=1
+            if self.mulligan_count < 0:
+                self.mulligan_count = 0
+        self.imageUpdate()
+        self.manager.systemImageUpdate(self.system)
+
+    def imageUpdate(self):
+        image = self.setting.system_card_image.copy()
+        draw = ImageDraw.Draw(image)
+        x, _ = draw.textsize(self.systemText, self.setting.text_font)
+        if self.viewFlag:
+            color = "red"
+        else:
+            color = "white"
+        draw.text((int(self.setting.card_width/2 - x/2), 0),
+                   self.systemText,
+                   font=self.setting.text_font,
+                   fill=color,
+                   stroke_width=3,
+                   stroke_fill="black")
+        x, y = draw.textsize(str(len(self.list)), self.setting.count_font)
+        draw.text((int(self.setting.card_width/2 - x/2),
+                   int(self.setting.card_height/2 - y/2)),
+                   str(len(self.list)),
+                   font=self.setting.count_font,
+                   fill="white",
+                   stroke_width=3,
+                   stroke_fill='black')
+        if self.mulligan_count != 0:
+            x, y = draw.textsize(str(self.mulligan_count), self.setting.count_font)
+            draw.text((int(self.setting.card_width - x - 2),
+                       int(self.setting.card_height - y - 2)),
+                       str(self.mulligan_count),
+                       font=self.setting.count_font,
+                       fill="red",
+                       stroke_width=3,
+                       stroke_fill='black')
+        self.image = ImageTk.PhotoImage(image)
 
     def addCommand(self):
         super().addCommand()

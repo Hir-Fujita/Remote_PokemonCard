@@ -12,6 +12,7 @@ class Coin:
         self.master = master
         self.setting = setting
         self.manager = manager
+        self.image = None
         self.front_data = setting.coin_front
         self.back_data = setting.coin_back
         self.result = False
@@ -78,6 +79,7 @@ class ShuffleButton:
         self.setting = setting
         self.manager = manager
         self.master = master
+        self.image = None
         self.image_data = setting.reload_image.resize((setting.card_width, setting.card_width))
         self.rotate = 0
         self.aff = None
@@ -114,6 +116,7 @@ class Vstar:
         self.manager = manager
         self.setting = setting
         self.flag = False
+        self.image = None
         self.image_data = setting.vstar_image
         self.checkimage_data = setting.vstar_check_image
 
@@ -139,6 +142,7 @@ class CheckButton:
         self.setting = setting
         self.systemText = systemText
         self.flag = False
+        self.image = None
 
     def flagUpdate(self, flag=None):
         if flag is None:

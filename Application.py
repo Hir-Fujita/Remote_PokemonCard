@@ -43,7 +43,7 @@ class Application(tk.Frame):
                                 command=lambda:self.setting.createWindow(self))
 
     def delete_window(self, master):
-        ret = messagebox.askyesno(title="終了確認",
+        ret = messagebox.askyesno(title="Information",
                                   message="Applicationを終了しますか？")
         if ret:
             master.destroy()
@@ -86,7 +86,11 @@ class Application(tk.Frame):
             self.cardManager.createDeckOnline(deckid)
             if len(self.cardManager.list) == 60:
                 self.cardManager.save()
-            deck_entry_window.destroy()
+                deck_entry_window.destroy()
+            else:
+                error_window = messagebox.showwarning(title="Information",
+                                                      message="デッキコードエラー",
+                                                      parent=deck_entry_window)
 
     def deck_entry_local(self):
         self.deck_image = self.cardManager.createDeckImage()
