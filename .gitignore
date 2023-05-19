@@ -1,2 +1,4 @@
 Card/
 Deck/
+__pycache__/
+.gitignore
