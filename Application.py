@@ -115,6 +115,7 @@ class Application(tk.Frame):
         scroll["command"]=deck_list_box.yview
         deck_list_box.bind("<<ListboxSelect>>",lambda e:deck_list_click())
         deck_files = os.listdir("Remote_PokemonCard\Deck")
+        deck_files = [deck for deck in deck_files if deck != "blank.txt"]
         for num, deck in enumerate(deck_files):
             deck_list_box.insert(num,deck[:-4])
 
