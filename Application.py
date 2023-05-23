@@ -9,10 +9,10 @@ from BattleManager import BattleManager
 from CardManager import CardManager
 from Setting import Setting
 
-# マリガンカウンター
+# V-Unionに対応させる
 
 NAME = "Remote_PokemonCard"
-VERSION = "ver.0.1"
+VERSION = "ver.0.2"
 
 class Application(tk.Frame):
     def __init__(self, master=None):
